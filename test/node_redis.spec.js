@@ -38,7 +38,7 @@ describe('The node_redis client', function () {
         client.quit(done);
     });
 
-    it('reset the parser while reconnecting', function (done) {
+    it('reset the parser while reconnecting (See #1190)', function (done) {
         var client = redis.createClient({
             retryStrategy: function () {
                 return 5;
@@ -870,7 +870,7 @@ describe('The node_redis client', function () {
                     client.on('error', function (err) {
                         assert.strictEqual(err.message, 'Protocol error, got "a" as reply type byte. Please report this.');
                         assert.strictEqual(err, error);
-                        assert(err instanceof redis.ReplyError);
+                        assert(err instanceof redis.ParserError);
                         // After the hard failure work properly again. The set should have been processed properly too
                         client.get('foo', function (err, res) {
                             assert.strictEqual(res, 'bar');
